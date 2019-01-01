@@ -12,6 +12,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 int degreesCelsius = DEFAULT_DEGREES;
 bool buttonDecrementDown = false;
 bool buttonIncrementDown = false;
+bool settingsChanged = false;
 
 bool isButtonPushed(int pin) {
   int buttonRead = digitalRead(pin);
@@ -36,6 +37,7 @@ void loop()
     if (!buttonDecrementDown) {
       degreesCelsius--;
       buttonDecrementDown = true;
+      settingsChanged = true;
     }
   } else {
     buttonDecrementDown = false;
@@ -45,11 +47,15 @@ void loop()
     if (!buttonIncrementDown) {
       degreesCelsius++;
       buttonIncrementDown = true;
+      settingsChanged = true;
     }
   } else {
     buttonIncrementDown = false;
   }
 
-  writeCurrentStatusToLCD(&lcd, degreesCelsius);
+  if (settingsChanged) {
+    writeCurrentStatusToLCD(&lcd, degreesCelsius);
+  }
+  settingsChanged = false;
   delay(100);
 }
