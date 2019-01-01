@@ -1,5 +1,5 @@
-#include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
+#include "lcd.h"
 
 #define DEFAULT_DEGREES 20
 
@@ -18,17 +18,9 @@ bool isButtonPushed(int pin) {
   return buttonRead == LOW;
 }
 
-void refreshDisplay() {
-  lcd.clear();
-  lcd.print(degreesCelsius);
-  lcd.print(" C");
-}
-
 void setup()
 {
-	// initialize the LCD
-	lcd.begin();
-  lcd.backlight();
+	initializeLCD(&lcd);
 
   // Define pin as input and activate the internal pull-up resistor
   pinMode(BUTTON_DECREMENT_PIN, INPUT_PULLUP);
@@ -58,6 +50,6 @@ void loop()
     buttonIncrementDown = false;
   }
 
-  refreshDisplay();
+  writeCurrentStatusToLCD(&lcd, degreesCelsius);
   delay(100);
 }
