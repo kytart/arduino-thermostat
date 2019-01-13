@@ -26,6 +26,8 @@ void setup()
   // Define pin as input and activate the internal pull-up resistor
   pinMode(BUTTON_DECREMENT_PIN, INPUT_PULLUP);
   pinMode(BUTTON_INCREMENT_PIN, INPUT_PULLUP);
+
+  writeCurrentStatusToLCD(&lcd, degreesCelsius);
 }
 
 void loop()
