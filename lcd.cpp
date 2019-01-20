@@ -1,6 +1,7 @@
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 #include "lcd.h"
+#include "DHT.h"
 
 #define DEGREE_SYMBOL_INDEX 0
 
@@ -12,10 +13,19 @@ void initializeLCD(LiquidCrystal_I2C *lcd) {
     lcd->createChar(DEGREE_SYMBOL_INDEX, DEGREE_SYMBOL);
 }
 
-void writeCurrentStatusToLCD(LiquidCrystal_I2C *lcd, const int setDegreesCelsius) {
+void writeCurrentStatusToLCD(LiquidCrystal_I2C *lcd, const int setDegreesCelsius, const float realDegreesCelsius) {
     lcd->clear();
+    lcd->print("Set:  ");
     lcd->print(setDegreesCelsius);
-    lcd->print(" ");
+    lcd->write(DEGREE_SYMBOL_INDEX);
+    lcd->print("C");
+    lcd->setCursor(0, 1);
+    lcd->print("Real: ");
+    if (isnan(realDegreesCelsius)) {
+        lcd->print("--");
+    } else {
+        lcd->print((int) realDegreesCelsius);
+    }
     lcd->write(DEGREE_SYMBOL_INDEX);
     lcd->print("C");
 }

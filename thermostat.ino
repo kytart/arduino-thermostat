@@ -1,15 +1,22 @@
 #include <LiquidCrystal_I2C.h>
 #include "lcd.h"
+#include "DHT.h"
 
 #define DEFAULT_DEGREES 20
 
 #define BUTTON_DECREMENT_PIN 12
 #define BUTTON_INCREMENT_PIN 11
 
+#define THERMO_PIN 10
+#define THERMO_TYPE DHT11
+
 // Set the LCD address to 0x27 for a 16 chars and 2 line display
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-int degreesCelsius = DEFAULT_DEGREES;
+DHT thermo(THERMO_PIN, THERMO_TYPE);
+float realDegreesCelsius = 0;
+
+int setDegreesCelsius = DEFAULT_DEGREES;
 bool buttonDecrementDown = false;
 bool buttonIncrementDown = false;
 
@@ -21,14 +28,17 @@ void setup()
   pinMode(BUTTON_DECREMENT_PIN, INPUT_PULLUP);
   pinMode(BUTTON_INCREMENT_PIN, INPUT_PULLUP);
 
-  writeCurrentStatusToLCD(&lcd, degreesCelsius);
+  writeCurrentStatusToLCD(&lcd, setDegreesCelsius, realDegreesCelsius);
+  thermo.begin();
 }
 
 void loop()
 {
-	bool settingsChanged = handleButtons();
+  bool settingsChanged = handleButtons();
+  readTemperature();
+  settingsChanged = true; // TODO remove after screen auto-turning off is implemented
   if (settingsChanged) {
-    writeCurrentStatusToLCD(&lcd, degreesCelsius);
+    writeCurrentStatusToLCD(&lcd, setDegreesCelsius, realDegreesCelsius);
   }
   delay(100);
 }
@@ -40,7 +50,7 @@ bool handleButtons() {
   
   if (isDecrementButtonPushed) {
     if (!buttonDecrementDown) {
-      degreesCelsius--;
+      setDegreesCelsius--;
       buttonDecrementDown = true;
       settingsChanged = true;
     }
@@ -50,7 +60,7 @@ bool handleButtons() {
 
   if (isIncrementButtonPushed) {
     if (!buttonIncrementDown) {
-      degreesCelsius++;
+      setDegreesCelsius++;
       buttonIncrementDown = true;
       settingsChanged = true;
     }
@@ -64,4 +74,8 @@ bool handleButtons() {
 bool isButtonPushed(int pin) {
   int buttonRead = digitalRead(pin);
   return buttonRead == LOW;
+}
+
+void readTemperature() {
+  realDegreesCelsius = thermo.readTemperature();
 }
