@@ -1,4 +1,6 @@
+#include <WiFi101.h>
 #include <LiquidCrystal_I2C.h>
+#include "wifi.h"
 #include "lcd.h"
 #include "DHT.h"
 
@@ -9,6 +11,8 @@
 
 #define THERMO_PIN 10
 #define THERMO_TYPE DHT11
+
+WiFiClient client;
 
 // Set the LCD address to 0x27 for a 16 chars and 2 line display
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -22,11 +26,16 @@ bool buttonIncrementDown = false;
 
 void setup()
 {
-	initializeLCD(&lcd);
+  Serial.begin(9600);
+
+  initializeLCD(&lcd);
 
   // Define pin as input and activate the internal pull-up resistor
   pinMode(BUTTON_DECREMENT_PIN, INPUT_PULLUP);
   pinMode(BUTTON_INCREMENT_PIN, INPUT_PULLUP);
+
+  writeConnectingToWifi(&lcd);
+  connectToWifi();
 
   writeCurrentStatusToLCD(&lcd, setDegreesCelsius, realDegreesCelsius);
   thermo.begin();

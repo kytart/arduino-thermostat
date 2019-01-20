@@ -13,6 +13,13 @@ void initializeLCD(LiquidCrystal_I2C *lcd) {
     lcd->createChar(DEGREE_SYMBOL_INDEX, DEGREE_SYMBOL);
 }
 
+void writeConnectingToWifi(LiquidCrystal_I2C *lcd) {
+    lcd->clear();
+    lcd->print("Connecting to");
+    lcd->setCursor(0, 1);
+    lcd->print(" WiFi...");
+}
+
 void writeCurrentStatusToLCD(LiquidCrystal_I2C *lcd, const int setDegreesCelsius, const float realDegreesCelsius) {
     lcd->clear();
     lcd->print("Set:  ");
