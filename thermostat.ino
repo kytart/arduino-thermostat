@@ -35,8 +35,11 @@ void setup()
 void loop()
 {
   bool settingsChanged = handleButtons();
-  readTemperature();
-  settingsChanged = true; // TODO remove after screen auto-turning off is implemented
+  float newRealDegreesCelsius = thermo.readTemperature();
+  if (newRealDegreesCelsius != realDegreesCelsius) {
+    realDegreesCelsius = newRealDegreesCelsius;
+    settingsChanged = true;
+  }
   if (settingsChanged) {
     writeCurrentStatusToLCD(&lcd, setDegreesCelsius, realDegreesCelsius);
   }
@@ -74,8 +77,4 @@ bool handleButtons() {
 bool isButtonPushed(int pin) {
   int buttonRead = digitalRead(pin);
   return buttonRead == LOW;
-}
-
-void readTemperature() {
-  realDegreesCelsius = thermo.readTemperature();
 }
