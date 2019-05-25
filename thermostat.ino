@@ -3,6 +3,7 @@
 #include "wifi.h"
 #include "lcd.h"
 #include "DHT.h"
+#include "temperature.h"
 
 #define DEFAULT_DEGREES 20
 
@@ -11,6 +12,9 @@
 
 #define THERMO_PIN 10
 #define THERMO_TYPE DHT11
+
+#define LOOP_DELAY 100
+#define RECORD_TEMPERATURE_INTERVAL 60000
 
 WiFiClient client;
 
@@ -23,6 +27,8 @@ float realDegreesCelsius = 0;
 int setDegreesCelsius = DEFAULT_DEGREES;
 bool buttonDecrementDown = false;
 bool buttonIncrementDown = false;
+
+int recordTemperatureDelayBuffer = 0;
 
 void setup()
 {
@@ -52,7 +58,12 @@ void loop()
   if (settingsChanged) {
     writeCurrentStatusToLCD(&lcd, setDegreesCelsius, realDegreesCelsius);
   }
-  delay(100);
+  if (recordTemperatureDelayBuffer > RECORD_TEMPERATURE_INTERVAL) {
+    recordTemperatureDelayBuffer = 0;
+    recordTemperature(&client, realDegreesCelsius, setDegreesCelsius);
+  }
+  recordTemperatureDelayBuffer += LOOP_DELAY;
+  delay(LOOP_DELAY);
 }
 
 bool handleButtons() {

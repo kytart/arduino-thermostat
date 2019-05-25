@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include <WiFi101.h>
 #include "wifi.h"
-#include "wifi_credentials.h"
+#include "config.h"
 
 void printWiFiStatus() {
   // print the SSID of the network you're attached to:
@@ -35,9 +35,9 @@ void connectToWifi() {
   int status = WL_IDLE_STATUS;
   while (status != WL_CONNECTED) {
     Serial.print("Attempting to connect to SSID: ");
-    Serial.println(ssid);
+    Serial.println(WIFI_SSID);
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
-    status = WiFi.begin(ssid, pass);
+    status = WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
     // wait 10 seconds for connection:
     delay(10000);
