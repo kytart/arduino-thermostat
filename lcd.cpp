@@ -1,7 +1,6 @@
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 #include "lcd.h"
-#include "DHT.h"
 
 #define DEGREE_SYMBOL_INDEX 0
 
@@ -20,6 +19,11 @@ void writeConnectingToWifi(LiquidCrystal_I2C *lcd) {
     lcd->print(" WiFi...");
 }
 
+void writeThermoSensorFailed(LiquidCrystal_I2C *lcd) {
+    lcd->clear();
+    lcd->print("Sensor error");
+}
+
 void writeCurrentStatusToLCD(LiquidCrystal_I2C *lcd, const int setDegreesCelsius, const float realDegreesCelsius) {
     lcd->clear();
     lcd->print("Set:  ");
@@ -28,11 +32,7 @@ void writeCurrentStatusToLCD(LiquidCrystal_I2C *lcd, const int setDegreesCelsius
     lcd->print("C");
     lcd->setCursor(0, 1);
     lcd->print("Real: ");
-    if (isnan(realDegreesCelsius)) {
-        lcd->print("--");
-    } else {
-        lcd->print((int) realDegreesCelsius);
-    }
+    lcd->print((int) realDegreesCelsius);
     lcd->write(DEGREE_SYMBOL_INDEX);
     lcd->print("C");
 }

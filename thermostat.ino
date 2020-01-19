@@ -2,7 +2,7 @@
 #include <LiquidCrystal_I2C.h>
 #include "wifi.h"
 #include "lcd.h"
-#include "DHT.h"
+#include <Adafruit_BMP280.h>
 #include "temperature.h"
 
 #define DEFAULT_DEGREES 20
@@ -10,8 +10,7 @@
 #define BUTTON_DECREMENT_PIN 12
 #define BUTTON_INCREMENT_PIN 11
 
-#define THERMO_PIN 10
-#define THERMO_TYPE DHT11
+#define BMP280_I2C_ADDRESS 0x76
 
 #define LOOP_DELAY 100
 #define RECORD_TEMPERATURE_INTERVAL 60000
@@ -21,7 +20,7 @@ WiFiClient client;
 // Set the LCD address to 0x27 for a 16 chars and 2 line display
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-DHT thermo(THERMO_PIN, THERMO_TYPE);
+Adafruit_BMP280 bmp;
 float realDegreesCelsius = 0;
 
 int setDegreesCelsius = DEFAULT_DEGREES;
@@ -43,14 +42,19 @@ void setup()
   writeConnectingToWifi(&lcd);
   connectToWifi();
 
+  if (!bmp.begin(BMP280_I2C_ADDRESS)) {
+    Serial.println("Could not find a valid BMP280 sensor, check wiring!");
+    writeThermoSensorFailed(&lcd);
+    while (1);
+  }
+
   writeCurrentStatusToLCD(&lcd, setDegreesCelsius, realDegreesCelsius);
-  thermo.begin();
 }
 
 void loop()
 {
   bool settingsChanged = handleButtons();
-  float newRealDegreesCelsius = thermo.readTemperature();
+  float newRealDegreesCelsius = bmp.readTemperature();
   if (newRealDegreesCelsius != realDegreesCelsius) {
     realDegreesCelsius = newRealDegreesCelsius;
     settingsChanged = true;
