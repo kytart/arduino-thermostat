@@ -2,13 +2,13 @@
 
 #define RECORD_TEMPERATURE_RESOURCE "/temperature"
 
-String createRecordTemperatureJsonBodyString(int current, int desired) {
-  return "{\"current\":" + String(current) + ",\"desired\":" + String(desired) + "}";
+String createRecordTemperatureJsonBodyString(int temperature) {
+  return "{\"temperature\":" + String(temperature) + "}";
 }
 
-void recordTemperature(WiFiClient *wifiClient, int current, int desired) {  
+void recordTemperature(WiFiClient *wifiClient, int temperature) {
   int responseCode;
-  String requestBody = createRecordTemperatureJsonBodyString(current, desired);
+  String requestBody = createRecordTemperatureJsonBodyString(temperature);
   httpRequest(wifiClient, HTTP_POST, RECORD_TEMPERATURE_RESOURCE, requestBody, responseCode);
   if (responseCode == HTTP_OK) {
     Serial.println("Temperature recorded");
