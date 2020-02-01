@@ -1,9 +1,10 @@
 #include "temperature.h"
+#include "config.h"
 
 #define RECORD_TEMPERATURE_RESOURCE "/temperature"
 
 String createRecordTemperatureJsonBodyString(int temperature) {
-  return "{\"temperature\":" + String(temperature) + "}";
+  return "{\"room\":\"" + String(ROOM) + "\",\"temperature\":" + String(temperature) + "}";
 }
 
 void recordTemperature(WiFiClient *wifiClient, int temperature) {
