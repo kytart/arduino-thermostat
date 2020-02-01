@@ -1,4 +1,4 @@
-#include <WiFi101.h>
+#include <WiFi.h>
 #include "wifi.h"
 #include <Adafruit_BMP280.h>
 #include "temperature.h"

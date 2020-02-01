@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include <WiFi101.h>
+#include <WiFi.h>
 #include "wifi.h"
 #include "config.h"
 
@@ -21,15 +21,6 @@ void printWiFiStatus() {
 }
 
 void connectToWifi() {
-  //Configure pins for Adafruit ATWINC1500 Feather
-  WiFi.setPins(8,7,4,2);
-
-  // check for the presence of the shield:
-  if (WiFi.status() == WL_NO_SHIELD) {
-    Serial.println("WiFi shield not present");
-    // don't continue:
-    while (true);
-  }
 
   // attempt to connect to WiFi network:
   int status = WL_IDLE_STATUS;
