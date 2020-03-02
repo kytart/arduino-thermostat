@@ -4,7 +4,7 @@
 #include "temperature.h"
 
 #define BMP280_I2C_ADDRESS 0x76
-#define LOOP_DELAY 10 * 60 * 1000
+#define LOOP_DELAY 2 * 60 * 1000
 
 WiFiClient client;
 Adafruit_BMP280 bmp;
