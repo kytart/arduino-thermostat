@@ -4,7 +4,7 @@
 #include "temperature.h"
 
 #define BMP280_I2C_ADDRESS 0x76
-#define LOOP_DELAY 2 * 60 * 1000
+#define TIME_TO_SLEEP 2 * 60 * 1000000 // 2 minutes in microseconds
 
 WiFiClient client;
 Adafruit_BMP280 bmp;
@@ -24,5 +24,6 @@ void loop()
 {
   int temperature = bmp.readTemperature();
   recordTemperature(&client, temperature);
-  delay(LOOP_DELAY);
+  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP);
+  esp_deep_sleep_start();
 }
