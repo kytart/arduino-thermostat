@@ -1,4 +1,3 @@
-#include <WiFi.h>
-#include "http.h"
+#include <ArduinoMqttClient.h>
 
-void recordTemperature(WiFiClient *wifiClient, int temperature);
+void recordTemperature(MqttClient *mqttClient, int temperature);

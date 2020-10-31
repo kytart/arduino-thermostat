@@ -1,12 +1,15 @@
 #include <WiFi.h>
 #include "wifi.h"
+#include <ArduinoMqttClient.h>
 #include <Adafruit_BMP280.h>
 #include "temperature.h"
+#include "config.h"
 
 #define BMP280_I2C_ADDRESS 0x76
 #define TIME_TO_SLEEP 2 * 60 * 1000000 // 2 minutes in microseconds
 
-WiFiClient client;
+WiFiClient wifiClient;
+MqttClient mqttClient(wifiClient);
 Adafruit_BMP280 bmp;
 
 void setup()
@@ -15,6 +18,12 @@ void setup()
   if (!connectToWifi()) {
     Serial.println("Failed to connect to wifi");
     sleep();
+  }
+
+  if (!mqttClient.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT)) {
+    Serial.print("MQTT connection failed! Error code = ");
+    Serial.println(mqttClient.connectError());
+    while (1);
   }
 
   if (!bmp.begin(BMP280_I2C_ADDRESS)) {
@@ -26,7 +35,7 @@ void setup()
 void loop()
 {
   int temperature = bmp.readTemperature();
-  recordTemperature(&client, temperature);
+  recordTemperature(&mqttClient, temperature);
   sleep();
 }
 
