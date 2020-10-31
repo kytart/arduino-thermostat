@@ -12,7 +12,10 @@ Adafruit_BMP280 bmp;
 void setup()
 {
   Serial.begin(9600);
-  connectToWifi();
+  if (!connectToWifi()) {
+    Serial.println("Failed to connect to wifi");
+    sleep();
+  }
 
   if (!bmp.begin(BMP280_I2C_ADDRESS)) {
     Serial.println("Could not find a valid BMP280 sensor, check wiring!");
@@ -24,6 +27,11 @@ void loop()
 {
   int temperature = bmp.readTemperature();
   recordTemperature(&client, temperature);
+  sleep();
+}
+
+void sleep()
+{
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP);
   esp_deep_sleep_start();
 }

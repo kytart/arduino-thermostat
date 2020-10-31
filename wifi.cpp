@@ -20,19 +20,24 @@ void printWiFiStatus() {
   Serial.println(" dBm");
 }
 
-void connectToWifi() {
+bool connectToWifi() {
 
   // attempt to connect to WiFi network:
-  int status = WL_IDLE_STATUS;
-  while (status != WL_CONNECTED) {
-    Serial.print("Attempting to connect to SSID: ");
-    Serial.println(WIFI_SSID);
-    // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
-    status = WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  int status;
+  Serial.print("Attempting to connect to SSID: ");
+  Serial.println(WIFI_SSID);
+  // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
-    // wait 10 seconds for connection:
-    delay(10000);
+  // wait 30 seconds for connection:
+  delay(30000);
+
+  status = WiFi.status();
+
+  if (status == WL_CONNECTED) {
+    printWiFiStatus();
+    return true;
+  } else {
+    return false;
   }
-  Serial.println("Connected to wifi");
-  printWiFiStatus();
 }

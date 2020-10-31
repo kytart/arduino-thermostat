@@ -1,1 +1,1 @@
-void connectToWifi();
+bool connectToWifi();
