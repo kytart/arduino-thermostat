@@ -41,6 +41,7 @@ void loop()
 
 void sleep()
 {
+  Serial.println("go to sleep");
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP);
   esp_deep_sleep_start();
 }
