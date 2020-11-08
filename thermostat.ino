@@ -36,6 +36,7 @@ void loop()
 {
   int temperature = bmp.readTemperature();
   recordTemperature(&mqttClient, temperature);
+  delay(10000);
   sleep();
 }
 
