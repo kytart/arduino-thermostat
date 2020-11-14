@@ -12,6 +12,9 @@ WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
 Adafruit_BMP280 bmp;
 
+#define LOOPS 5
+int loopCount = 0;
+
 void setup()
 {
   Serial.begin(9600);
@@ -36,8 +39,13 @@ void loop()
 {
   int temperature = bmp.readTemperature();
   recordTemperature(&mqttClient, temperature);
-  delay(10000);
-  sleep();
+
+  if (loopCount < LOOPS) {
+    delay(1000);
+    loopCount++;
+  } else {
+    sleep();
+  }
 }
 
 void sleep()
