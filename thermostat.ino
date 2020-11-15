@@ -6,21 +6,18 @@
 #include "config.h"
 
 #define BMP280_I2C_ADDRESS 0x76
-#define TIME_TO_SLEEP 2 * 60 * 1000000 // 2 minutes in microseconds
+#define DELAY 60 * 1000 // 1 minute in milliseconds
 
 WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
 Adafruit_BMP280 bmp;
 
-#define LOOPS 5
-int loopCount = 0;
-
 void setup()
 {
   Serial.begin(9600);
-  if (!connectToWifi()) {
+  while (!connectToWifi()) {
     Serial.println("Failed to connect to wifi");
-    sleep();
+    delay(10000);
   }
 
   if (!mqttClient.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT)) {
@@ -39,18 +36,5 @@ void loop()
 {
   int temperature = bmp.readTemperature();
   recordTemperature(&mqttClient, temperature);
-
-  if (loopCount < LOOPS) {
-    delay(1000);
-    loopCount++;
-  } else {
-    sleep();
-  }
-}
-
-void sleep()
-{
-  Serial.println("go to sleep");
-  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP);
-  esp_deep_sleep_start();
+  delay(DELAY);
 }
