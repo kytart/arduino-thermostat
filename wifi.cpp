@@ -30,7 +30,7 @@ bool connectToWifi() {
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
   // wait 30 seconds for connection:
-  delay(30000);
+  delay(10000);
 
   status = WiFi.status();
 
