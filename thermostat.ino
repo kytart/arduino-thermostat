@@ -20,10 +20,10 @@ void setup()
     delay(10000);
   }
 
-  if (!mqttClient.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT)) {
+  while (!mqttClient.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT)) {
     Serial.print("MQTT connection failed! Error code = ");
     Serial.println(mqttClient.connectError());
-    while (1);
+    delay(10000);
   }
 
   if (!bmp.begin(BMP280_I2C_ADDRESS)) {
