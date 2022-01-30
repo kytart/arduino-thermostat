@@ -35,6 +35,7 @@ void setup()
 void loop()
 {
   int temperature = bmp.readTemperature();
-  recordTemperature(&mqttClient, temperature);
+  int adjustedTemperature = temperature + SENSOR_ADJUST;
+  recordTemperature(&mqttClient, adjustedTemperature);
   delay(DELAY);
 }
