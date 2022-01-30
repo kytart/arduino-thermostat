@@ -6,7 +6,7 @@
 #include "config.h"
 
 #define BMP280_I2C_ADDRESS 0x76
-#define DELAY 60 * 1000 // 1 minute in milliseconds
+#define DELAY 30 * 1000 // 1 minute in milliseconds
 
 WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
