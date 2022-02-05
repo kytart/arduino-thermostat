@@ -3,10 +3,11 @@
 #include <ArduinoMqttClient.h>
 #include <Adafruit_BMP280.h>
 #include "temperature.h"
+#include "esp.h"
 #include "config.h"
 
 #define BMP280_I2C_ADDRESS 0x76
-#define DELAY 30 * 1000 // 1 minute in milliseconds
+#define SLEEP_PERIOD_S 60
 
 WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
@@ -37,5 +38,10 @@ void loop()
   int temperature = bmp.readTemperature();
   int adjustedTemperature = temperature + SENSOR_ADJUST;
   recordTemperature(&mqttClient, adjustedTemperature);
-  delay(DELAY);
+
+  delay(100);
+  Serial.print("Going to sleep for ");
+  Serial.print(SLEEP_PERIOD_S);
+  Serial.println(" seconds");
+  hibernate(SLEEP_PERIOD_S * 1000);
 }
